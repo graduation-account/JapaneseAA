@@ -40,6 +40,7 @@ try:
     from feature_extractor import extract_features, extract_features_with_pipelines
     from model_loader import load_all_models, load_models2
     from datetime import datetime
+    from huggingface_hub import snapshot_download
     print("✓ カスタムモジュールのインポート完了")
 except Exception as e:
     print(f"✗ カスタムモジュールのインポートエラー: {e}")
@@ -48,8 +49,25 @@ except Exception as e:
 
 # パス設定
 BASE_DIR = Path(__file__).parent
-CONFIG_PATH = BASE_DIR / "models" / "ensemble_config.json"
-CONFIG2_PATH = BASE_DIR / "models2" / "ensemble_config.json"
+MODEL_REPO_ID = "graduation-account/japaneseaa-models"
+MODEL_CACHE_DIR = BASE_DIR / "hf_model_assets"
+
+print("\nHugging Faceからモデルアセットを取得しています...")
+MODEL_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+snapshot_download(
+    repo_id=MODEL_REPO_ID,
+    repo_type="model",
+    local_dir=str(MODEL_CACHE_DIR),
+    local_dir_use_symlinks=False,
+    resume_download=True,
+)
+print("✓ モデルアセットの取得完了")
+
+MODELS_DIR = MODEL_CACHE_DIR / "models"
+MODELS2_DIR = MODEL_CACHE_DIR / "models2"
+
+CONFIG_PATH = MODELS_DIR / "ensemble_config.json"
+CONFIG2_PATH = MODELS2_DIR / "ensemble_config.json"
 DATASET_PATH = BASE_DIR / "dataset" / "minister_features.csv"
 DATASET2_PATH = BASE_DIR / "dataset" / "JP_texts_with_dependency_features.csv"
 LOG_DIR = BASE_DIR / "logs"
@@ -138,11 +156,11 @@ try:
     print("\n[8/8] モデルの読み込み中...")
     print("※ 初回起動時は時間がかかる場合があります...")
     print("\n既存システムのモデルを読み込み中...")
-    models = load_all_models(BASE_DIR, config)
+    models = load_all_models(MODEL_CACHE_DIR, config)
     print("✓ 既存システムのモデルの読み込み完了")
     
     print("\n新規システムのモデルを読み込み中...")
-    models2 = load_models2(BASE_DIR, config2)
+    models2 = load_models2(MODEL_CACHE_DIR, config2)
     print("✓ 新規システムのモデルの読み込み完了")
 except Exception as e:
     print(f"✗ モデルの読み込みエラー: {e}")

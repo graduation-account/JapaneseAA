@@ -1,3 +1,14 @@
+---
+title: JapaneseAA
+emoji: 📈
+colorFrom: gray
+colorTo: indigo
+sdk: gradio
+sdk_version: 4.44.0
+python_version: 3.9
+pinned: false
+---
+
 # 著者類似度判定システム / Author Similarity Analysis System
 
 日本語文章を入力し、訓練済みBERT+CatBoostアンサンブルモデルを使用して、選択した著者との類似度を判定するGradioアプリケーションです。
