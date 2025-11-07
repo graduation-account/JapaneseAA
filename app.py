@@ -515,8 +515,7 @@ if __name__ == "__main__":
     print("=" * 50 + "\n")
     
     try:
-        # server_port=None for automatic port selection (if port is in use, automatically selects another port)
-        demo.launch(share=False, server_name="127.0.0.1", server_port=None, show_error=True)
+        demo.launch()
     except Exception as e:
         print(f"\n✗ Gradio server startup error: {e}")
         traceback.print_exc()
