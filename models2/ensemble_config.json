@@ -1,0 +1,68 @@
+{
+  "run_dir": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414",
+  "filters": {
+    "min_tokens_per_text": 10,
+    "min_texts_per_author": 20,
+    "top_n_authors": null
+  },
+  "alpha": 0.7,
+  "bert": {
+    "path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/bert_model",
+    "model_name": "cl-tohoku/bert-large-japanese-v2",
+    "tokenizer_max_length": 256
+  },
+  "catboost": {
+    "path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/catboost_model.cbm",
+    "params": {
+      "iterations": 2000,
+      "learning_rate": 0.05,
+      "depth": 6,
+      "loss_function": "MultiClass",
+      "eval_metric": "TotalF1",
+      "random_seed": 42,
+      "verbose": 200,
+      "od_type": "Iter",
+      "od_wait": 100
+    }
+  },
+  "label_encoder_path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/preprocess/label_encoder.joblib",
+  "feature_list_path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/preprocess/feature_list.json",
+  "text_pipelines_manifest_path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/preprocess/text_pipelines_manifest.json",
+  "author_ids": [
+    11005,
+    11009,
+    11011,
+    11016,
+    11027,
+    11028,
+    11031,
+    11036,
+    11037,
+    11040,
+    11042,
+    11047,
+    11056,
+    11068,
+    11075,
+    11077
+  ],
+  "columns": {
+    "author": "Author ID",
+    "text": "Text",
+    "token_count": "Token Count"
+  },
+  "metrics": {
+    "catboost": {
+      "acc": 0.22857142857142856,
+      "f1_macro": 0.19313973063973064
+    },
+    "bert": {
+      "acc": 0.5571428571428572,
+      "f1_macro": 0.5144823926073926
+    },
+    "ensemble": {
+      "acc": 0.5571428571428572,
+      "f1_macro": 0.5138528138528139
+    }
+  }
+}

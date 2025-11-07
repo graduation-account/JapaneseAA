@@ -1,0 +1,64 @@
+{
+  "text_pipelines": {
+    "POS Bigrams": {
+      "pipeline_path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/preprocess/pipe_pos_bigrams.joblib",
+      "n_components": 3,
+      "svd_columns": [
+        "POS Bigrams_svd_0",
+        "POS Bigrams_svd_1",
+        "POS Bigrams_svd_2"
+      ],
+      "vec_max_features": 300
+    },
+    "Particle Bigrams": {
+      "pipeline_path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/preprocess/pipe_particle_bigrams.joblib",
+      "n_components": 3,
+      "svd_columns": [
+        "Particle Bigrams_svd_0",
+        "Particle Bigrams_svd_1",
+        "Particle Bigrams_svd_2"
+      ],
+      "vec_max_features": 300
+    },
+    "Punctuation Preceding Tokens": {
+      "pipeline_path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/preprocess/pipe_punctuation_preceding_tokens.joblib",
+      "n_components": 3,
+      "svd_columns": [
+        "Punctuation Preceding Tokens_svd_0",
+        "Punctuation Preceding Tokens_svd_1",
+        "Punctuation Preceding Tokens_svd_2"
+      ],
+      "vec_max_features": 300
+    },
+    "dependency_path_patterns": {
+      "pipeline_path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/preprocess/pipe_dependency_path_patterns.joblib",
+      "n_components": 3,
+      "svd_columns": [
+        "dependency_path_patterns_svd_0",
+        "dependency_path_patterns_svd_1",
+        "dependency_path_patterns_svd_2"
+      ],
+      "vec_max_features": 300
+    },
+    "Dependency Pairs": {
+      "pipeline_path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/preprocess/pipe_dependency_pairs.joblib",
+      "n_components": 3,
+      "svd_columns": [
+        "Dependency Pairs_svd_0",
+        "Dependency Pairs_svd_1",
+        "Dependency Pairs_svd_2"
+      ],
+      "vec_max_features": 300
+    },
+    "Dependency Types": {
+      "pipeline_path": "/content/drive/MyDrive/Database/AA_BERT_CATBOOST_PIPELINED_20251105_065414/preprocess/pipe_dependency_types.joblib",
+      "n_components": 3,
+      "svd_columns": [
+        "Dependency Types_svd_0",
+        "Dependency Types_svd_1",
+        "Dependency Types_svd_2"
+      ],
+      "vec_max_features": 300
+    }
+  }
+}

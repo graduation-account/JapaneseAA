@@ -1,0 +1,34 @@
+{
+  "bert_path": "/content/drive/MyDrive/Database/models/bert_minister",
+  "catboost_path": "/content/drive/MyDrive/Database/models/catboost_minister.cbm",
+  "alpha": 0.7,
+  "preprocess": {
+    "label_encoder_path": "/content/drive/MyDrive/Database/models/preprocess/label_encoder.joblib",
+    "chi_selector_path": "/content/drive/MyDrive/Database/models/preprocess/chi_selector.joblib",
+    "selected_features": [
+      "Non-Independent Usage Rate",
+      "Unique Dependencies",
+      "Max Dependency Depth",
+      "Avg Dependency Depth",
+      "Forward Dependencies",
+      "Backward Dependencies",
+      "sentence_length",
+      "subj_verb_order_ratio",
+      "obj_verb_order_ratio",
+      "adj_noun_order_ratio"
+    ],
+    "chi_k": 10
+  },
+  "tokenizer_max_length": 128,
+  "bert_hparams": {
+    "epochs": 3,
+    "batch_size": 8,
+    "learning_rate": 2e-05,
+    "model_name": "cl-tohoku/bert-base-japanese-v2"
+  },
+  "classes": [
+    "安倍晋三",
+    "岸田文雄",
+    "石破茂"
+  ]
+}

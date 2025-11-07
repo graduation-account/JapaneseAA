@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# ログファイル
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 一時ファイル
+*.tmp
+*.temp
+*.zip
+
+# データセットは含める（必要に応じてコメントアウト）
+# dataset/*.csv
+
+# モデルファイルはGit LFSで管理するため、.gitignoreには含めない
+# *.cbm
+# *.joblib
+# *.safetensors
+
