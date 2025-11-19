@@ -90,6 +90,44 @@ python app.py
 
 Access http://127.0.0.1:8000 in your browser to use the application.
 
+### Git LFSファイルのトラブルシューティング / Git LFS File Troubleshooting
+
+**日本語 / Japanese**
+
+GitHubからリポジトリをクローンまたはプルした後、アプリケーションを起動しようとするとエラーが発生する場合があります。これは、Git LFSで管理されている大きなファイル（モデルファイルなど）がポインタファイルのままになっているためです。
+
+以下のコマンドを実行して、実際のファイルを取得してください：
+
+```bash
+git lfs install
+git lfs fetch --all
+git lfs checkout
+```
+
+または、提供されているバッチファイルを実行してください：
+
+```bash
+fix_lfs_files.bat
+```
+
+**English**
+
+After cloning or pulling the repository from GitHub, you may encounter errors when trying to launch the application. This is because large files managed by Git LFS (such as model files) remain as pointer files.
+
+Run the following commands to retrieve the actual files:
+
+```bash
+git lfs install
+git lfs fetch --all
+git lfs checkout
+```
+
+Or run the provided batch file:
+
+```bash
+fix_lfs_files.bat
+```
+
 ---
 
 ## 使用方法 / How to Use
