@@ -358,7 +358,7 @@ This application also provides RESTful API endpoints:
 - テキストは日本語で入力してください
 - ログファイルは日付ごとに自動的に作成されます
 - NINJAL Corpus (16)のモデルは、テキストパイプラインを使用するため、より多くの特徴量を処理します
-- このシステムはFastAPIとカスタムHTML/CSS/JavaScriptを使用しており、Gradioベースのv3とは異なるUIを提供します
+- このシステムはFastAPIとカスタムHTML/CSS/JavaScriptを使用しております
 
 ### English
 
@@ -366,7 +366,7 @@ This application also provides RESTful API endpoints:
 - Please input text in Japanese
 - Log files are automatically created for each date
 - The NINJAL Corpus (16) model processes more features as it uses text pipelines
-- This system uses FastAPI with custom HTML/CSS/JavaScript, providing a different UI from the Gradio-based v3
+- This system uses FastAPI with custom HTML/CSS/JavaScript
 
 ---
 
