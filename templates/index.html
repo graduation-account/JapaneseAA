@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Similarity Analysis System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Author Similarity Analysis System</h1>
+            <p class="subtitle">Analyze text similarity with trained authors</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="author-group">Author Group</label>
+                    <select id="author-group" class="form-control">
+                        <option value="Former PMs (3)">Former PMs (3) - 3 Former Prime Ministers</option>
+                        <option value="NINJAL Corpus (16)">NINJAL Corpus (16) - 16 Authors from NINJAL Corpus</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="text-input">Input Text</label>
+                    <textarea id="text-input" class="form-control" rows="5" placeholder="Enter Japanese text to analyze..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="author-select">Target Author</label>
+                    <select id="author-select" class="form-control">
+                        {% for author in available_authors_old %}
+                        <option value="{{ author }}">{{ author }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button id="predict-btn" class="btn btn-primary">
+                    <span class="btn-text">Calculate Similarity</span>
+                    <span class="btn-loader" style="display: none;">Processing...</span>
+                </button>
+            </div>
+
+            <div class="result-section" id="result-section" style="display: none;">
+                <h2>Analysis Result</h2>
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-info">
+                            <span class="info-label">Author Group:</span>
+                            <span id="result-author-group" class="info-value"></span>
+                        </div>
+                        <div class="result-info">
+                            <span class="info-label">Selected Author:</span>
+                            <span id="result-selected-author" class="info-value"></span>
+                        </div>
+                        <div class="result-info highlight">
+                            <span class="info-label">Similarity Score:</span>
+                            <span id="result-similarity" class="info-value similarity-score"></span>
+                        </div>
+                    </div>
+
+                    <div id="result-analysis" class="result-analysis"></div>
+
+                    <div class="predictions-section">
+                        <h3>Prediction Probabilities for All Authors</h3>
+                        <div id="predictions-list" class="predictions-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="error-section" id="error-section" style="display: none;">
+                <div class="error-message" id="error-message"></div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="authors-info">
+                <div class="authors-group">
+                    <h4>Former PMs (3)</h4>
+                    <p>{{ ', '.join(available_authors_old) }}</p>
+                </div>
+                <div class="authors-group">
+                    <h4>NINJAL Corpus (16)</h4>
+                    <p>{{ ', '.join(available_authors_new) }}</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
+

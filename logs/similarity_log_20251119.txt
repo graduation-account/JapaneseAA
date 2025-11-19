@@ -1,0 +1,231 @@
+================================================================================
+
+================================================================================
+Timestamp: 2025-11-19 21:42:02
+Author Group: Former PMs (3)
+--------------------------------------------------------------------------------
+Input Text: 総理退任後初の鳥取帰郷にあたっての記者会見。
+Selected Author: 石破茂
+
+[Features]
+  Avg Dependency Depth: 2.0714285714285716
+  Backward Dependencies: 6
+  Dependency Path Patterns: {'compound (初 -> 総理)': 1, 'compound (初 -> 退任)': 1, 'compound (初 -> 後)': 1, 'nmod (帰郷 -> 初)': 1, 'case (初 -> の)': 1, 'compound (帰郷 -> 鳥取)': 1, 'nmod (会見 -> 帰郷)': 1, 'case (帰郷 -> に)': 1, 'fixed (に -> あたっ)': 1, 'fixed (に -> て)': 1}
+  Forward Dependencies: 7
+  Max Dependency Depth: 3
+  Non-Independent Usage Rate: 0.2857142857142857
+  POS Bigrams: {'NOUN_NOUN': 4, 'NOUN_ADP': 2, 'ADP_PROPN': 1, 'PROPN_NOUN': 1, 'ADP_VERB': 1, 'VERB_SCONJ': 1, 'SCONJ_ADP': 1, 'ADP_NOUN': 1, 'NOUN_PUNCT': 1}
+  Particle Bigrams: {}
+  Punctuation Preceding Tokens: {'会見': 1}
+  Unique Dependencies: 6
+  adj_noun_order_ratio: 0.0
+  obj_verb_order_ratio: 0.0
+  sentence_length: 14
+  subj_verb_order_ratio: 0.0
+
+[BERT Prediction Probabilities]
+  安倍晋三: 5.33%
+  岸田文雄: 8.82%
+  石破茂: 85.85%
+
+[CatBoost Prediction Probabilities]
+  安倍晋三: 42.48%
+  岸田文雄: 1.53%
+  石破茂: 56.00%
+
+[Ensemble Prediction Probabilities]
+  安倍晋三: 16.47%
+  岸田文雄: 6.63%
+  石破茂: 76.90%
+
+[Analysis Result]
+
+Author Group: Former PMs (3)
+Selected Author: 石破茂
+Similarity Score: 76.90%
+
+✓ Analysis Result: Highest similarity with "石破茂" (76.90%)
+
+Prediction Probabilities for All Authors (3 authors):
+----------------------------------------
+石破茂: 76.90% ← Selected ★ Highest Probability
+安倍晋三: 16.47% 
+岸田文雄: 6.63% 
+
+================================================================================
+
+================================================================================
+Timestamp: 2025-11-19 21:46:59
+Author Group: Former PMs (3)
+--------------------------------------------------------------------------------
+Input Text: 総理退任後初の鳥取帰郷にあたっての記者会見。
+Selected Author: 石破茂
+
+[Features]
+  Avg Dependency Depth: 2.0714285714285716
+  Backward Dependencies: 6
+  Dependency Path Patterns: {'compound (初 -> 総理)': 1, 'compound (初 -> 退任)': 1, 'compound (初 -> 後)': 1, 'nmod (帰郷 -> 初)': 1, 'case (初 -> の)': 1, 'compound (帰郷 -> 鳥取)': 1, 'nmod (会見 -> 帰郷)': 1, 'case (帰郷 -> に)': 1, 'fixed (に -> あたっ)': 1, 'fixed (に -> て)': 1}
+  Forward Dependencies: 7
+  Max Dependency Depth: 3
+  Non-Independent Usage Rate: 0.2857142857142857
+  POS Bigrams: {'NOUN_NOUN': 4, 'NOUN_ADP': 2, 'ADP_PROPN': 1, 'PROPN_NOUN': 1, 'ADP_VERB': 1, 'VERB_SCONJ': 1, 'SCONJ_ADP': 1, 'ADP_NOUN': 1, 'NOUN_PUNCT': 1}
+  Particle Bigrams: {}
+  Punctuation Preceding Tokens: {'会見': 1}
+  Unique Dependencies: 6
+  adj_noun_order_ratio: 0.0
+  obj_verb_order_ratio: 0.0
+  sentence_length: 14
+  subj_verb_order_ratio: 0.0
+
+[BERT Prediction Probabilities]
+  安倍晋三: 5.33%
+  岸田文雄: 8.82%
+  石破茂: 85.85%
+
+[CatBoost Prediction Probabilities]
+  安倍晋三: 42.48%
+  岸田文雄: 1.53%
+  石破茂: 56.00%
+
+[Ensemble Prediction Probabilities]
+  安倍晋三: 16.47%
+  岸田文雄: 6.63%
+  石破茂: 76.90%
+
+[Analysis Result]
+
+Author Group: Former PMs (3)
+Selected Author: 石破茂
+Similarity Score: 76.90%
+
+✓ Analysis Result: Highest similarity with "石破茂" (76.90%)
+
+Prediction Probabilities for All Authors (3 authors):
+----------------------------------------
+石破茂: 76.90% ← Selected ★ Highest Probability
+安倍晋三: 16.47% 
+岸田文雄: 6.63% 
+
+================================================================================
+
+================================================================================
+Timestamp: 2025-11-19 21:48:12
+Author Group: NINJAL Corpus (16)
+--------------------------------------------------------------------------------
+Input Text: たばこは、吸っている本人が吸う煙よりも、周りの人がすう副りゅう煙の方が有害です。
+Selected Author: 11005
+
+[Features]
+  Avg Dependency Depth: 2.6296296296296298
+  Backward Dependencies: 12
+  Dependency Pairs_svd_0: 0.0
+  Dependency Pairs_svd_1: 0.0
+  Dependency Pairs_svd_2: 0.0
+  Dependency Types_svd_0: 2.8808601881006295
+  Dependency Types_svd_1: -0.24623470694974747
+  Dependency Types_svd_2: -0.7804901785952038
+  Forward Dependencies: 12
+  Max Dependency Depth: 6
+  Non-Independent Usage Rate: 0.37037037037037035
+  POS Bigrams_svd_0: 2.4388876438833593
+  POS Bigrams_svd_1: 0.616721685261888
+  POS Bigrams_svd_2: 0.42755277583978235
+  Particle Bigrams_svd_0: 0.019885760154863777
+  Particle Bigrams_svd_1: -0.016269405187081972
+  Particle Bigrams_svd_2: 0.020248580604045763
+  Punctuation Preceding Tokens_svd_0: 0.0
+  Punctuation Preceding Tokens_svd_1: 0.0
+  Punctuation Preceding Tokens_svd_2: 0.0
+  Token Count: 27
+  adj_noun_order_ratio: 0.037037037037037035
+  avg_root_distance: 2.6296296296296298
+  dependency_path_patterns_svd_0: 3.0575691365716566
+  dependency_path_patterns_svd_1: -0.34185575393252193
+  dependency_path_patterns_svd_2: -0.8105499369277659
+  obj_verb_order_ratio: 0.0
+  sentence_length: 27
+  subj_verb_order_ratio: 0.037037037037037035
+
+[BERT Prediction Probabilities]
+  11005: 97.18%
+  11009: 0.05%
+  11011: 0.11%
+  11016: 0.06%
+  11027: 0.08%
+  11028: 0.19%
+  11031: 0.16%
+  11036: 0.20%
+  11037: 0.27%
+  11040: 0.20%
+  11042: 0.09%
+  11047: 0.55%
+  11056: 0.18%
+  11068: 0.18%
+  11075: 0.39%
+  11077: 0.10%
+
+[CatBoost Prediction Probabilities]
+  11005: 6.18%
+  11009: 5.30%
+  11011: 7.92%
+  11016: 4.61%
+  11027: 5.00%
+  11028: 6.06%
+  11031: 6.10%
+  11036: 6.22%
+  11037: 5.51%
+  11040: 4.92%
+  11042: 7.14%
+  11047: 5.14%
+  11056: 10.60%
+  11068: 4.45%
+  11075: 7.44%
+  11077: 7.41%
+
+[Ensemble Prediction Probabilities]
+  11005: 69.88%
+  11009: 1.63%
+  11011: 2.45%
+  11016: 1.43%
+  11027: 1.56%
+  11028: 1.95%
+  11031: 1.94%
+  11036: 2.01%
+  11037: 1.84%
+  11040: 1.62%
+  11042: 2.20%
+  11047: 1.93%
+  11056: 3.31%
+  11068: 1.46%
+  11075: 2.51%
+  11077: 2.30%
+
+[Analysis Result]
+
+Author Group: NINJAL Corpus (16)
+Selected Author: 11005
+Similarity Score: 69.88%
+
+✓ Analysis Result: Highest similarity with "11005" (69.88%)
+
+Prediction Probabilities for All Authors (16 authors):
+----------------------------------------
+11005: 69.88% ← Selected ★ Highest Probability
+11056: 3.31% 
+11075: 2.51% 
+11011: 2.45% 
+11077: 2.30% 
+11042: 2.20% 
+11036: 2.01% 
+11028: 1.95% 
+11031: 1.94% 
+11047: 1.93% 
+11037: 1.84% 
+11009: 1.63% 
+11040: 1.62% 
+11027: 1.56% 
+11068: 1.46% 
+11016: 1.43% 
+
+================================================================================
+

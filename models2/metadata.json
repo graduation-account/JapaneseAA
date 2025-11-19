@@ -1,0 +1,11 @@
+{
+  "python": "3.12.12",
+  "numpy": "2.0.2",
+  "pandas": "2.2.2",
+  "scikit_learn": "1.6.1",
+  "catboost": "1.2.8",
+  "torch": "2.8.0+cu126",
+  "transformers": "4.57.1",
+  "seed": 42,
+  "device": "cuda"
+}
