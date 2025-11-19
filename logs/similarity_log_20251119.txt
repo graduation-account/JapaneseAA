@@ -229,3 +229,57 @@ Prediction Probabilities for All Authors (16 authors):
 
 ================================================================================
 
+================================================================================
+Timestamp: 2025-11-19 22:37:52
+Author Group: Former PMs (3)
+--------------------------------------------------------------------------------
+Input Text: 総理退任後初の鳥取帰郷にあたっての記者会見。
+Selected Author: 石破茂
+
+[Features]
+  Avg Dependency Depth: 2.0714285714285716
+  Backward Dependencies: 6
+  Dependency Path Patterns: {'compound (初 -> 総理)': 1, 'compound (初 -> 退任)': 1, 'compound (初 -> 後)': 1, 'nmod (帰郷 -> 初)': 1, 'case (初 -> の)': 1, 'compound (帰郷 -> 鳥取)': 1, 'nmod (会見 -> 帰郷)': 1, 'case (帰郷 -> に)': 1, 'fixed (に -> あたっ)': 1, 'fixed (に -> て)': 1}
+  Forward Dependencies: 7
+  Max Dependency Depth: 3
+  Non-Independent Usage Rate: 0.2857142857142857
+  POS Bigrams: {'NOUN_NOUN': 4, 'NOUN_ADP': 2, 'ADP_PROPN': 1, 'PROPN_NOUN': 1, 'ADP_VERB': 1, 'VERB_SCONJ': 1, 'SCONJ_ADP': 1, 'ADP_NOUN': 1, 'NOUN_PUNCT': 1}
+  Particle Bigrams: {}
+  Punctuation Preceding Tokens: {'会見': 1}
+  Unique Dependencies: 6
+  adj_noun_order_ratio: 0.0
+  obj_verb_order_ratio: 0.0
+  sentence_length: 14
+  subj_verb_order_ratio: 0.0
+
+[BERT Prediction Probabilities]
+  安倍晋三: 5.33%
+  岸田文雄: 8.82%
+  石破茂: 85.85%
+
+[CatBoost Prediction Probabilities]
+  安倍晋三: 42.48%
+  岸田文雄: 1.53%
+  石破茂: 56.00%
+
+[Ensemble Prediction Probabilities]
+  安倍晋三: 16.47%
+  岸田文雄: 6.63%
+  石破茂: 76.90%
+
+[Analysis Result]
+
+Author Group: Former PMs (3)
+Selected Author: 石破茂
+Similarity Score: 76.90%
+
+✓ Analysis Result: Highest similarity with "石破茂" (76.90%)
+
+Prediction Probabilities for All Authors (3 authors):
+----------------------------------------
+石破茂: 76.90% ← Selected ★ Highest Probability
+安倍晋三: 16.47% 
+岸田文雄: 6.63% 
+
+================================================================================
+
