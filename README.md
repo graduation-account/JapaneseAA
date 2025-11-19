@@ -384,11 +384,4 @@ This application also provides RESTful API endpoints:
 - **pandas, numpy**: Data processing
 - **HTML/CSS/JavaScript**: Frontend UI
 
----
-
-## ライセンス / License
-
-このプロジェクトのライセンス情報は含まれていません。使用前に確認してください。
-
-License information for this project is not included. Please check before use.
 
