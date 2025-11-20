@@ -68,6 +68,39 @@ except Exception as e:
     traceback.print_exc()
     sys.exit(1)
 
+# Webスクレイピングライブラリのインポート（遅延読み込み用）
+_requests_available = False
+_bs4_available = False
+
+try:
+    print("\n[3.5/6] Webスクレイピングライブラリのインポート中...")
+    import requests
+    from bs4 import BeautifulSoup
+    _requests_available = True
+    _bs4_available = True
+    print("✓ Webスクレイピングライブラリのインポート完了")
+except Exception as e:
+    print(f"✗ Webスクレイピングライブラリのインポートエラー: {e}")
+    print("\n必要なパッケージをインストールしてください:")
+    print("pip install requests beautifulsoup4 lxml")
+    print("※ URL機能は使用できませんが、アプリケーションは起動します。")
+    traceback.print_exc()
+    # エラーでも続行（URL機能は使用不可になる）
+except ImportError as e:
+    print(f"✗ カスタムモジュールのインポートエラー: {e}")
+    print("\n注意: GinZAモデルの読み込みエラーが発生する可能性があります。")
+    print("以下のコマンドでモデルを再インストールしてください:")
+    print("  py -m spacy download ja_ginza_electra")
+    print("\nまたは、PyTorchをアップグレードしてください:")
+    print("  pip install torch>=2.1.0")
+    print("\nアプリケーションは起動しますが、特徴量抽出時にエラーが発生する可能性があります。")
+    traceback.print_exc()
+    # インポートエラーでも続行（実際の使用時にエラーが発生する）
+except Exception as e:
+    print(f"✗ カスタムモジュールのインポートエラー: {e}")
+    traceback.print_exc()
+    sys.exit(1)
+
 # numpy型をPythonネイティブ型に変換する関数
 def convert_numpy_types(obj):
     """numpy型をPythonネイティブ型に変換（再帰的）"""
@@ -491,6 +524,394 @@ def predict_similarity(text, selected_author, author_group):
         error_msg += f"Details:\n{traceback.format_exc()}"
         raise RuntimeError(error_msg)
 
+def split_text_by_punctuation(text):
+    """テキストを「。」で分割"""
+    sentences = [s.strip() + '。' for s in text.split('。') if s.strip()]
+    # 最後の文が「。」で終わっていない場合は追加しない
+    if text and not text.endswith('。'):
+        if sentences:
+            sentences[-1] = sentences[-1].rstrip('。')
+    return sentences
+
+def fetch_text_from_url(url):
+    """URLからテキストを取得"""
+    # 必要なライブラリをインポート（常にインポートを試みる）
+    try:
+        import requests
+        from bs4 import BeautifulSoup
+    except ImportError as e:
+        raise ValueError(f"必要なライブラリ（requests, beautifulsoup4）がインストールされていません。エラー: {str(e)}\npip install requests beautifulsoup4 lxml を実行してください。")
+    
+    # Twitter/XのURLの場合はSeleniumを使用
+    if 'twitter.com' in url or 'x.com' in url:
+        try:
+            from selenium import webdriver
+            from selenium.webdriver.chrome.service import Service
+            from selenium.webdriver.chrome.options import Options
+            from selenium.webdriver.common.by import By
+            from selenium.webdriver.support.ui import WebDriverWait
+            from selenium.webdriver.support import expected_conditions as EC
+            from webdriver_manager.chrome import ChromeDriverManager
+            import time
+        except ImportError:
+            raise ValueError("X（Twitter）のリンクからテキストを取得するには、Seleniumが必要です。\npip install selenium webdriver-manager を実行してください。")
+        
+        try:
+            # Chromeオプションを設定（ヘッドレスモード）
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')  # ブラウザを表示しない
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--disable-dev-shm-usage')
+            chrome_options.add_argument('--disable-gpu')
+            chrome_options.add_argument('--window-size=1920,1080')
+            chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+            
+            # WebDriverを起動
+            service = Service(ChromeDriverManager().install())
+            driver = webdriver.Chrome(service=service, options=chrome_options)
+            
+            try:
+                # Xのページを開く
+                driver.get(url)
+                
+                # コンテンツが読み込まれるまで待機（最大30秒）
+                wait = WebDriverWait(driver, 30)
+                
+                # ツイートのテキストを取得（複数のセレクタを試行）
+                tweet_text = None
+                selectors = [
+                    'article[data-testid="tweet"] div[data-testid="tweetText"]',
+                    'article div[lang]',
+                    'article span[lang]',
+                    '[data-testid="tweetText"]'
+                ]
+                
+                for selector in selectors:
+                    try:
+                        element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+                        tweet_text = element.text
+                        if tweet_text and len(tweet_text.strip()) > 0:
+                            break
+                    except:
+                        continue
+                
+                # 見つからない場合は少し待ってから再試行
+                if not tweet_text:
+                    time.sleep(3)
+                    try:
+                        article = driver.find_element(By.CSS_SELECTOR, 'article[data-testid="tweet"]')
+                        tweet_text = article.text
+                    except:
+                        pass
+                
+                if not tweet_text or len(tweet_text.strip()) == 0:
+                    raise ValueError("ツイートのテキストを取得できませんでした。リンクが正しいか確認してください。")
+                
+                return tweet_text.strip()
+                
+            finally:
+                driver.quit()
+                
+        except Exception as e:
+            raise ValueError(f"X（Twitter）からのテキスト取得中にエラーが発生しました: {str(e)}")
+    
+    # 通常のURLの処理（既存のコード）
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+        response.encoding = response.apparent_encoding
+        
+        soup = BeautifulSoup(response.text, 'lxml')
+        
+        # スクリプトとスタイルタグを削除
+        for script in soup(["script", "style"]):
+            script.decompose()
+        
+        # 主要なコンテンツタグからテキストを抽出
+        text_parts = []
+        
+        # articleタグを優先
+        article = soup.find('article')
+        if article:
+            text_parts.append(article.get_text(separator=' ', strip=True))
+        
+        # mainタグ
+        main = soup.find('main')
+        if main:
+            text_parts.append(main.get_text(separator=' ', strip=True))
+        
+        # pタグからテキストを抽出
+        paragraphs = soup.find_all('p')
+        if paragraphs:
+            para_text = ' '.join([p.get_text(strip=True) for p in paragraphs if p.get_text(strip=True)])
+            if para_text:
+                text_parts.append(para_text)
+        
+        # どれも見つからない場合はbody全体から
+        if not text_parts:
+            body = soup.find('body')
+            if body:
+                text_parts.append(body.get_text(separator=' ', strip=True))
+        
+        # テキストを結合して整形
+        full_text = ' '.join(text_parts)
+        # 余分な空白を削除
+        full_text = ' '.join(full_text.split())
+        
+        if not full_text:
+            raise ValueError("テキストを取得できませんでした。")
+        
+        return full_text
+    except requests.exceptions.Timeout:
+        raise ValueError("URLへの接続がタイムアウトしました。")
+    except requests.exceptions.RequestException as e:
+        raise ValueError(f"URLへの接続エラー: {str(e)}")
+    except Exception as e:
+        raise ValueError(f"テキストの取得中にエラーが発生しました: {str(e)}")
+
+def predict_similarity_for_all_authors(text, author_group):
+    """テキストに対して全著者の類似度を計算（selected_authorなし）"""
+    if not text or not text.strip():
+        raise ValueError("Please enter text.")
+    
+    if not author_group:
+        raise ValueError("Please select an author group.")
+    
+    # 著者グループに応じて利用可能な著者リストを選択
+    if author_group == "Former PMs (3)":
+        available_authors = available_authors_old
+        use_new_model = False
+        author_group_name = "Former PMs (3)"
+    else:
+        available_authors = available_authors_new
+        use_new_model = True
+        author_group_name = "NINJAL Corpus (16)"
+    
+    try:
+        if use_new_model:
+            # 新規システム（16人の著者）の場合
+            # 1. 特徴量抽出（テキストパイプラインを使用）
+            features = extract_features_with_pipelines(
+                text, 
+                models2['text_pipelines_manifest_path'],
+                BASE_DIR / "models2"
+            )
+            
+            # 2. モデル入力用に特徴量を準備
+            feature_vector = prepare_features_for_model2(features, models2['feature_list'])
+            
+            # 3. BERT予測
+            tokenizer = models2['tokenizer']
+            bert_model = models2['bert_model']
+            
+            inputs = tokenizer(
+                text,
+                max_length=config2['bert']['tokenizer_max_length'],
+                padding='max_length',
+                truncation=True,
+                return_tensors='pt'
+            )
+            
+            with torch.no_grad():
+                bert_outputs = bert_model(**inputs)
+                bert_probs = torch.softmax(bert_outputs.logits, dim=-1).numpy()[0]
+            
+            # 4. CatBoost予測
+            catboost_probs = models2['catboost_model'].predict_proba(feature_vector)[0]
+            
+            # 5. アンサンブル
+            alpha = config2['alpha']
+            ensemble_probs = alpha * bert_probs + (1 - alpha) * catboost_probs
+            
+            # 6. ラベルエンコーダーで著者IDに変換
+            label_encoder = models2['label_encoder']
+            classes = label_encoder.classes_.tolist()
+            classes = [str(c) for c in classes]  # 文字列に変換
+            
+            num_authors = 16
+        else:
+            # 既存システム（3人の著者）の場合
+            # 1. 特徴量抽出
+            features = extract_features(text)
+            
+            # 2. モデル入力用に特徴量を準備
+            feature_vector = prepare_features_for_model(features)
+            
+            # 3. chi_selectorで特徴量選択
+            if models['chi_selector'] is not None:
+                feature_vector = models['chi_selector'].transform(feature_vector)
+            
+            # 4. BERT予測
+            tokenizer = models['tokenizer']
+            bert_model = models['bert_model']
+            
+            inputs = tokenizer(
+                text,
+                max_length=config['tokenizer_max_length'],
+                padding='max_length',
+                truncation=True,
+                return_tensors='pt'
+            )
+            
+            with torch.no_grad():
+                bert_outputs = bert_model(**inputs)
+                bert_probs = torch.softmax(bert_outputs.logits, dim=-1).numpy()[0]
+            
+            # 5. CatBoost予測
+            catboost_probs = models['catboost_model'].predict_proba(feature_vector)[0]
+            
+            # 6. アンサンブル
+            alpha = config['alpha']
+            ensemble_probs = alpha * bert_probs + (1 - alpha) * catboost_probs
+            
+            # 7. ラベルエンコーダーで著者名に変換
+            label_encoder = models['label_encoder']
+            classes = config['classes']
+            
+            num_authors = 3
+        
+        # 全著者に対する類似度スコアを計算
+        all_results = {}
+        for i, author_name in enumerate(classes):
+            similarity_score = float(ensemble_probs[i] * 100)
+            all_results[str(author_name)] = {
+                "similarity_score": round(similarity_score, 2),
+                "max_prob_author": str(author_name),
+                "max_prob": round(similarity_score, 2)
+            }
+        
+        # 最大確率の著者を特定
+        max_author = max(all_results.items(), key=lambda x: x[1]["similarity_score"])
+        
+        return {
+            "author_group": author_group_name,
+            "all_results": all_results,
+            "max_similarity_author": max_author[0],
+            "max_similarity_score": max_author[1]["similarity_score"]
+        }
+        
+    except Exception as e:
+        import traceback
+        error_msg = f"An error occurred: {str(e)}\n\n"
+        error_msg += f"Details:\n{traceback.format_exc()}"
+        raise RuntimeError(error_msg)
+
+def predict_similarity_detailed(text, author_group):
+    """句読点ごとに細かく類似度を分析"""
+    if not text or not text.strip():
+        raise ValueError("Please enter text.")
+    
+    if not author_group:
+        raise ValueError("Please select an author group.")
+    
+    # テキストを句読点で分割
+    sentences = split_text_by_punctuation(text)
+    
+    if not sentences:
+        raise ValueError("有効な文章が見つかりませんでした。")
+    
+    # 全体の分析結果
+    whole_result = None
+    try:
+        # 全体に対して最大確率の著者を取得
+        whole_analysis = predict_similarity_for_all_authors(text, author_group)
+        whole_result = {
+            "max_author": whole_analysis["max_similarity_author"],
+            "max_score": whole_analysis["max_similarity_score"]
+        }
+    except Exception as e:
+        pass
+    
+    # 各文の分析結果
+    sentence_results = []
+    for idx, sentence in enumerate(sentences):
+        try:
+            sentence_analysis = predict_similarity_for_all_authors(sentence, author_group)
+            sentence_results.append({
+                "sentence_index": idx + 1,
+                "sentence": sentence,
+                "max_author": sentence_analysis["max_similarity_author"],
+                "max_score": sentence_analysis["max_similarity_score"],
+                "all_scores": sentence_analysis["all_results"]
+            })
+        except Exception as e:
+            sentence_results.append({
+                "sentence_index": idx + 1,
+                "sentence": sentence,
+                "error": str(e)
+            })
+    
+    # 最も類似度が高い著者を集計
+    author_counts = {}
+    for result in sentence_results:
+        if "max_author" in result:
+            author = result["max_author"]
+            if author not in author_counts:
+                author_counts[author] = {"count": 0, "total_score": 0.0}
+            author_counts[author]["count"] += 1
+            author_counts[author]["total_score"] += result["max_score"]
+    
+    # 最も多く出現した著者を特定
+    most_common_author = None
+    if author_counts:
+        most_common_author = max(author_counts.items(), key=lambda x: x[1]["count"])
+    
+    # 通常の結果表示形式を生成（全体テキストの分析結果から）
+    standard_result = None
+    if whole_result:
+        try:
+            # 全体テキストの分析結果を取得
+            whole_analysis = predict_similarity_for_all_authors(text, author_group)
+            max_author = whole_analysis["max_similarity_author"]
+            max_score = whole_analysis["max_similarity_score"]
+            all_results = whole_analysis["all_results"]
+            
+            # 著者グループ名を取得
+            if author_group == "Former PMs (3)":
+                author_group_name = "Former PMs (3)"
+                num_authors = 3
+            else:
+                author_group_name = "NINJAL Corpus (16)"
+                num_authors = 16
+            
+            # 予測結果をソート
+            predictions = []
+            for author, scores in sorted(all_results.items(), key=lambda x: x[1]["similarity_score"], reverse=True):
+                predictions.append({
+                    "author": author,
+                    "probability": scores["similarity_score"],
+                    "is_selected": author == max_author,
+                    "is_max": author == max_author
+                })
+            
+            # 通常の結果表示形式を生成
+            UNKNOWN_THRESHOLD = 50.0
+            standard_result = {
+                "author_group": author_group_name,
+                "selected_author": max_author,  # 最大確率の著者を選択
+                "similarity_score": round(max_score, 2),
+                "max_prob_author": max_author,
+                "max_prob": round(max_score, 2),
+                "has_unknown_author": max_score < UNKNOWN_THRESHOLD,
+                "unknown_threshold": UNKNOWN_THRESHOLD,
+                "num_authors": num_authors,
+                "predictions": predictions
+            }
+        except Exception as e:
+            pass
+    
+    return {
+        "whole_result": whole_result,
+        "sentence_results": sentence_results,
+        "most_common_author": most_common_author[0] if most_common_author else None,
+        "author_counts": {k: {"count": v["count"], "avg_score": v["total_score"] / v["count"]} 
+                         for k, v in author_counts.items()} if author_counts else {},
+        "standard_result": standard_result  # 通常の結果表示形式を追加
+    }
+
 # APIエンドポイント
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
@@ -524,6 +945,68 @@ async def predict(request: Request):
         result = predict_similarity(text, selected_author, author_group)
         # numpy型をPythonネイティブ型に変換してからJSONResponseに渡す
         result = convert_numpy_types(result)
+        return JSONResponse(content=result)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/fetch-url")
+async def fetch_url(request: Request):
+    """URLからテキストを取得"""
+    try:
+        data = await request.json()
+        url = data.get("url", "")
+        
+        if not url:
+            raise ValueError("URLを入力してください。")
+        
+        text = fetch_text_from_url(url)
+        return JSONResponse(content={"text": text, "success": True})
+    except ValueError as e:
+        return JSONResponse(
+            status_code=400,
+            content={"success": False, "error": str(e), "text": ""}
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"success": False, "error": str(e), "text": ""}
+        )
+
+@app.post("/api/predict-detailed")
+async def predict_detailed(request: Request):
+    """細かい類似度分析を実行"""
+    try:
+        data = await request.json()
+        text = data.get("text", "")
+        author_group = data.get("author_group", "")
+        analysis_mode = data.get("analysis_mode", "both")  # "whole", "detailed", "both"
+        
+        if not text or not text.strip():
+            raise ValueError("テキストを入力してください。")
+        
+        if not author_group:
+            raise ValueError("著者グループを選択してください。")
+        
+        result = {}
+        
+        # 全体の分析
+        if analysis_mode in ["whole", "both"]:
+            try:
+                whole_analysis = predict_similarity_for_all_authors(text, author_group)
+                result["whole"] = convert_numpy_types(whole_analysis)
+            except Exception as e:
+                result["whole"] = {"error": str(e)}
+        
+        # 細かい分析
+        if analysis_mode in ["detailed", "both"]:
+            try:
+                detailed_analysis = predict_similarity_detailed(text, author_group)
+                result["detailed"] = convert_numpy_types(detailed_analysis)
+            except Exception as e:
+                result["detailed"] = {"error": str(e)}
+        
         return JSONResponse(content=result)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

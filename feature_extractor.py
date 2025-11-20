@@ -21,11 +21,36 @@ def get_nlp():
                 f"python -m spacy download ja_ginza_electra\n"
                 f"エラー詳細: {e}"
             )
+        except ValueError as e:
+            # モデルのデシリアライゼーションエラーの場合
+            error_msg = str(e)
+            if "E149" in error_msg or "deserializing" in error_msg.lower():
+                raise ImportError(
+                    f"GinZAモデルの読み込み中にエラーが発生しました（モデルのバージョン不一致の可能性）。\n"
+                    f"以下の手順でモデルを再インストールしてください:\n\n"
+                    f"1. 既存のモデルを削除:\n"
+                    f"   python -m spacy info ja_ginza_electra\n"
+                    f"   （モデルのパスを確認後、手動で削除）\n\n"
+                    f"2. パッケージを再インストール:\n"
+                    f"   pip uninstall -y ja-ginza-electra\n"
+                    f"   pip install -U ginza transformers spacy\n"
+                    f"   python -m spacy download ja_ginza_electra\n\n"
+                    f"エラー詳細: {e}"
+                )
+            else:
+                raise ImportError(
+                    f"GinZAモデルの読み込み中にエラーが発生しました。\n"
+                    f"モデルを再インストールしてください:\n"
+                    f"python -m spacy download ja_ginza_electra\n"
+                    f"エラー詳細: {e}"
+                )
         except Exception as e:
             raise ImportError(
                 f"GinZAモデルの読み込み中にエラーが発生しました。\n"
-                f"モデルを再インストールしてください:\n"
-                f"python -m spacy download ja_ginza_electra\n"
+                f"以下の手順でモデルを再インストールしてください:\n\n"
+                f"1. pip uninstall -y ja-ginza-electra\n"
+                f"2. pip install -U ginza transformers spacy\n"
+                f"3. python -m spacy download ja_ginza_electra\n\n"
                 f"エラー詳細: {e}"
             )
     return _nlp

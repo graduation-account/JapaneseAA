@@ -1,8 +1,24 @@
-# 著者類似度判定システム / Author Similarity Analysis System
+# 著者類似度判定システム v5 / Author Similarity Analysis System v5
 
-日本語文章を入力し、訓練済みBERT+CatBoostアンサンブルモデルを使用して、選択した著者との類似度を判定するWebアプリケーションです。
+日本語文章を入力し、訓練済みBERT+CatBoostアンサンブルモデルを使用して、選択した著者との類似度を判定するWebアプリケーションです。v5では、URLからのテキスト取得機能と句読点ごとの詳細分析機能が追加されました。
 
-This is a web application that analyzes Japanese text and calculates similarity with selected authors using pre-trained BERT+CatBoost ensemble models.
+This is a web application that analyzes Japanese text and calculates similarity with selected authors using pre-trained BERT+CatBoost ensemble models. Version 5 adds URL text fetching and sentence-by-sentence detailed analysis features.
+
+---
+
+## 新機能 / New Features (v5)
+
+### 日本語 / Japanese
+
+- **URLからのテキスト取得**: 任意のURLを入力して、リンク先の文章を自動で取得し、類似度を計算できます
+- **詳細分析機能**: 句読点で区切った各文章ごとに類似度を計算し、最も類似度の高い著者を表示します
+- **分析モード選択**: 「全体テキストのみ」または「詳細分析（句読点ごと）」を選択できます
+
+### English
+
+- **URL Text Fetching**: Enter any URL to automatically fetch text from the link and calculate similarity
+- **Detailed Analysis**: Calculate similarity for each sentence separated by punctuation and display the author with the highest similarity
+- **Analysis Mode Selection**: Choose between "Whole Text Only" or "Detailed (Sentence-by-Sentence)" analysis
 
 ---
 
@@ -59,9 +75,14 @@ The system supports two author groups:
 pip install -r requirements.txt
 ```
 
-2. **GinZAモデルのダウンロード**:
+2. **GinZAモデルのインストール**:
 ```bash
-python -m spacy download ja_ginza_electra
+pip install ja-ginza-electra
+```
+
+または、GinZAモデルに問題がある場合は：
+```bash
+fix_ginza.bat
 ```
 
 3. **アプリケーションの起動**:
@@ -69,7 +90,9 @@ python -m spacy download ja_ginza_electra
 python app.py
 ```
 
-ブラウザで http://127.0.0.1:8000 にアクセスして使用できます。
+4. **ブラウザでアクセス**:
+   - Chromeブラウザで http://127.0.0.1:8000 にアクセスして使用できます
+   - 推奨ブラウザ: Google Chrome（URL取得機能でX（Twitter）のリンクを使用する場合に必要）
 
 ### English
 
@@ -78,9 +101,14 @@ python app.py
 pip install -r requirements.txt
 ```
 
-2. **Download GinZA model**:
+2. **Install GinZA model**:
 ```bash
-python -m spacy download ja_ginza_electra
+pip install ja-ginza-electra
+```
+
+Or if you encounter issues with the GinZA model:
+```bash
+fix_ginza.bat
 ```
 
 3. **Launch the application**:
@@ -88,7 +116,9 @@ python -m spacy download ja_ginza_electra
 python app.py
 ```
 
-Access http://127.0.0.1:8000 in your browser to use the application.
+4. **Access in browser**:
+   - Access http://127.0.0.1:8000 in Google Chrome browser to use the application
+   - Recommended browser: Google Chrome (required when using URL fetching feature with X/Twitter links)
 
 ### Git LFSファイルのトラブルシューティング / Git LFS File Troubleshooting
 
@@ -104,12 +134,6 @@ git lfs fetch --all
 git lfs checkout
 ```
 
-または、提供されているバッチファイルを実行してください：
-
-```bash
-fix_lfs_files.bat
-```
-
 **English**
 
 After cloning or pulling the repository from GitHub, you may encounter errors when trying to launch the application. This is because large files managed by Git LFS (such as model files) remain as pointer files.
@@ -122,12 +146,6 @@ git lfs fetch --all
 git lfs checkout
 ```
 
-Or run the provided batch file:
-
-```bash
-fix_lfs_files.bat
-```
-
 ---
 
 ## 使用方法 / How to Use
@@ -135,50 +153,72 @@ fix_lfs_files.bat
 ### 日本語 / Japanese
 
 1. **著者グループの選択**
-   - 「著者グループ選択」から使用する著者グループを選択します
+   - 「Author Group」から使用する著者グループを選択します
    - 「Former PMs (3)」: 元総理大臣3人のデータセット
    - 「NINJAL Corpus (16)」: NINJAL作文コーパスから抽出した16人のデータセット
 
-2. **テキストの入力**
-   - 「入力テキスト」欄に分析したい日本語の文章を入力します
+2. **入力方法の選択**
+   - **Direct Text Input**: テキストを直接入力
+   - **URL Input**: URLを入力してテキストを自動取得（X（Twitter）のリンクも対応）
 
-3. **著者の選択**
-   - 「対象著者」ドロップダウンから比較したい著者を選択します
+3. **テキストの入力**
+   - 直接入力の場合: 「Input Text」欄に分析したい日本語の文章を入力します
+   - URL入力の場合: URLを入力して「Fetch Text」ボタンをクリックします
+
+4. **分析モードの選択**
+   - **Whole Text Only**: 全体テキストのみを分析
+   - **Detailed (Sentence-by-Sentence)**: 句読点ごとに細かく分析
+
+5. **著者の選択**
+   - 「Target Author」ドロップダウンから比較したい著者を選択します
    - 選択した著者グループに応じて、利用可能な著者リストが自動的に更新されます
+   - 詳細分析モードでは、選択した著者との比較ではなく、全著者に対する分析が実行されます
 
-4. **類似度の計算**
-   - 「類似度を計算」ボタンをクリックします
+6. **類似度の計算**
+   - 「Calculate Similarity」ボタンをクリックします
    - または、テキスト入力欄で Ctrl+Enter（Macでは Cmd+Enter）を押すと実行できます
 
-5. **結果の確認**
-   - 右側の「分析結果」パネルに以下の情報が表示されます：
+7. **結果の確認**
+   - 右側の「Analysis Result」パネルに以下の情報が表示されます：
      - 選択した著者との類似度スコア（パーセンテージ）
      - すべての著者に対する予測確率（プログレスバー付き）
      - 分析結果（最大確率が50%未満の場合は「未知の著者の可能性」が表示されます）
+   - 詳細分析モードの場合、各文ごとの分析結果も表示されます
 
 ### English
 
 1. **Select Author Group**
-   - Choose the author group from "著者グループ選択" (Author Group Selection)
+   - Choose the author group from "Author Group"
    - "Former PMs (3)": Dataset of 3 former Japanese Prime Ministers
    - "NINJAL Corpus (16)": Dataset of 16 authors extracted from NINJAL Writing Corpus
 
-2. **Enter Text**
-   - Input the Japanese text you want to analyze in the "入力テキスト" (Input Text) field
+2. **Select Input Method**
+   - **Direct Text Input**: Enter text directly
+   - **URL Input**: Enter URL to automatically fetch text (supports X/Twitter links)
 
-3. **Select Author**
-   - Choose the author to compare from the "対象著者" (Target Author) dropdown
+3. **Enter Text**
+   - For direct input: Input the Japanese text you want to analyze in the "Input Text" field
+   - For URL input: Enter the URL and click the "Fetch Text" button
+
+4. **Select Analysis Mode**
+   - **Whole Text Only**: Analyze the entire text only
+   - **Detailed (Sentence-by-Sentence)**: Analyze each sentence separated by punctuation
+
+5. **Select Author**
+   - Choose the author to compare from the "Target Author" dropdown
    - The available author list is automatically updated based on the selected author group
+   - In detailed analysis mode, analysis is performed for all authors rather than comparing with the selected author
 
-4. **Calculate Similarity**
-   - Click the "類似度を計算" (Calculate Similarity) button
+6. **Calculate Similarity**
+   - Click the "Calculate Similarity" button
    - Or press Ctrl+Enter (Cmd+Enter on Mac) in the text input field
 
-5. **View Results**
-   - The "分析結果" (Analysis Result) panel on the right displays:
+7. **View Results**
+   - The "Analysis Result" panel on the right displays:
      - Similarity score with the selected author (percentage)
      - Prediction probabilities for all authors (with progress bars)
      - Analysis result (if the maximum probability is below 50%, a "Possible Unknown Author" warning is displayed)
+   - In detailed analysis mode, analysis results for each sentence are also displayed
 
 ---
 
@@ -187,12 +227,13 @@ fix_lfs_files.bat
 ### 日本語 / Japanese
 
 ```
-AA system_v4/
+AA system_v5/
 ├── app.py                          # メインアプリケーション（FastAPI）
 ├── feature_extractor.py            # 特徴量抽出モジュール
 ├── model_loader.py                 # モデルローダー
 ├── requirements.txt                # 依存関係
 ├── README.md                       # このファイル
+├── fix_ginza.bat                   # GinZAモデル再インストール用スクリプト
 │
 ├── templates/                      # HTMLテンプレート
 │   └── index.html                  # メインページ
@@ -230,12 +271,13 @@ AA system_v4/
 ### English
 
 ```
-AA system_v4/
+AA system_v5/
 ├── app.py                          # Main application (FastAPI)
 ├── feature_extractor.py            # Feature extraction module
 ├── model_loader.py                 # Model loader
 ├── requirements.txt                # Dependencies
 ├── README.md                       # This file
+├── fix_ginza.bat                   # Script for reinstalling GinZA model
 │
 ├── templates/                      # HTML templates
 │   └── index.html                  # Main page
@@ -296,7 +338,13 @@ AA system_v4/
    - すべての著者に対する予測確率を降順で表示します（プログレスバー付き）
    - 最大確率が50%未満の場合は「未知の著者の可能性」を警告します
 
-6. **ログ出力**
+6. **詳細分析（v5新機能）**
+   - 句読点（「。」）でテキストを分割
+   - 各文に対して全著者の類似度を計算
+   - 各文ごとの最大確率著者を表示
+   - 全体の分析結果も同時に表示
+
+7. **ログ出力**
    - 分析結果は `logs/similarity_log_YYYYMMDD.txt` に記録されます
 
 ### English
@@ -321,7 +369,13 @@ AA system_v4/
    - Shows prediction probabilities for all authors in descending order (with progress bars)
    - Warns about "Possible Unknown Author" if maximum probability is below 50%
 
-6. **Logging**
+6. **Detailed Analysis (v5 New Feature)**
+   - Splits text by punctuation marks ("。")
+   - Calculates similarity for all authors for each sentence
+   - Displays the author with maximum probability for each sentence
+   - Also displays overall analysis results
+
+7. **Logging**
    - Analysis results are recorded in `logs/similarity_log_YYYYMMDD.txt`
 
 ---
@@ -334,9 +388,15 @@ AA system_v4/
 
 - `GET /`: メインページ（HTML）
 - `GET /api/authors?author_group={group}`: 著者リストを取得
-- `POST /api/predict`: 類似度を予測
+- `POST /api/predict`: 類似度を予測（全体テキスト分析）
   - リクエストボディ: `{"text": "...", "selected_author": "...", "author_group": "..."}`
   - レスポンス: JSON形式の予測結果
+- `POST /api/fetch-url`: URLからテキストを取得（v5新機能）
+  - リクエストボディ: `{"url": "..."}`
+  - レスポンス: `{"text": "...", "success": true/false, "error": "..."}`
+- `POST /api/predict-detailed`: 詳細分析を実行（v5新機能）
+  - リクエストボディ: `{"text": "...", "author_group": "...", "analysis_mode": "whole"|"detailed"}`
+  - レスポンス: JSON形式の詳細分析結果
 
 ### English
 
@@ -344,9 +404,15 @@ This application also provides RESTful API endpoints:
 
 - `GET /`: Main page (HTML)
 - `GET /api/authors?author_group={group}`: Get author list
-- `POST /api/predict`: Predict similarity
+- `POST /api/predict`: Predict similarity (whole text analysis)
   - Request body: `{"text": "...", "selected_author": "...", "author_group": "..."}`
   - Response: Prediction result in JSON format
+- `POST /api/fetch-url`: Fetch text from URL (v5 new feature)
+  - Request body: `{"url": "..."}`
+  - Response: `{"text": "...", "success": true/false, "error": "..."}`
+- `POST /api/predict-detailed`: Execute detailed analysis (v5 new feature)
+  - Request body: `{"text": "...", "author_group": "...", "analysis_mode": "whole"|"detailed"}`
+  - Response: Detailed analysis result in JSON format
 
 ---
 
@@ -358,7 +424,9 @@ This application also provides RESTful API endpoints:
 - テキストは日本語で入力してください
 - ログファイルは日付ごとに自動的に作成されます
 - NINJAL Corpus (16)のモデルは、テキストパイプラインを使用するため、より多くの特徴量を処理します
-- このシステムはFastAPIとカスタムHTML/CSS/JavaScriptを使用しております
+- URL入力機能は、X（Twitter）のリンクにも対応しています（Seleniumを使用）
+- X（Twitter）のリンクからテキストを取得する場合、初回実行時にChromeDriverが自動ダウンロードされます
+- 詳細分析モードでは、各文ごとに分析を行うため、処理時間が長くなる場合があります
 
 ### English
 
@@ -366,7 +434,9 @@ This application also provides RESTful API endpoints:
 - Please input text in Japanese
 - Log files are automatically created for each date
 - The NINJAL Corpus (16) model processes more features as it uses text pipelines
-- This system uses FastAPI with custom HTML/CSS/JavaScript
+- URL input feature supports X (Twitter) links (uses Selenium)
+- When fetching text from X (Twitter) links, ChromeDriver will be automatically downloaded on first run
+- Detailed analysis mode may take longer as it analyzes each sentence separately
 
 ---
 
@@ -383,5 +453,13 @@ This application also provides RESTful API endpoints:
 - **scikit-learn**: Machine learning utilities
 - **pandas, numpy**: Data processing
 - **HTML/CSS/JavaScript**: Frontend UI
+- **requests, beautifulsoup4**: Web scraping (v5)
+- **Selenium, webdriver-manager**: Browser automation for X/Twitter (v5)
 
+---
 
+## ライセンス / License
+
+このプロジェクトのライセンス情報は含まれていません。使用前に確認してください。
+
+License information for this project is not included. Please check before use.

@@ -24,11 +24,47 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Input Method</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="input-method" value="text" checked>
+                            <span>Direct Text Input</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="input-method" value="url">
+                            <span>URL Input</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="url-input-group" style="display: none;">
+                    <label for="url-input">URL</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="url" id="url-input" class="form-control" placeholder="https://example.com/article">
+                        <button id="fetch-url-btn" class="btn btn-secondary" type="button">Fetch Text</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="text-input">Input Text</label>
                     <textarea id="text-input" class="form-control" rows="5" placeholder="Enter Japanese text to analyze..."></textarea>
                 </div>
 
                 <div class="form-group">
+                    <label>Analysis Mode</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="analysis-mode" value="whole" checked>
+                            <span>Whole Text Only</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="analysis-mode" value="detailed">
+                            <span>Detailed (Sentence-by-Sentence)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="author-select-group">
                     <label for="author-select">Target Author</label>
                     <select id="author-select" class="form-control">
                         {% for author in available_authors_old %}
@@ -66,6 +102,11 @@
                     <div class="predictions-section">
                         <h3>Prediction Probabilities for All Authors</h3>
                         <div id="predictions-list" class="predictions-list"></div>
+                    </div>
+
+                    <div id="detailed-results-section" style="display: none;">
+                        <h3>Detailed Analysis (Sentence-by-Sentence)</h3>
+                        <div id="detailed-results" class="detailed-results"></div>
                     </div>
                 </div>
             </div>
