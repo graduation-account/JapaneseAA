@@ -90,7 +90,9 @@ fix_ginza.bat
 python app.py
 ```
 
-ブラウザで http://127.0.0.1:8000 にアクセスして使用できます。
+4. **ブラウザでアクセス**:
+   - Chromeブラウザで http://127.0.0.1:8000 にアクセスして使用できます
+   - 推奨ブラウザ: Google Chrome（URL取得機能でX（Twitter）のリンクを使用する場合に必要）
 
 ### English
 
@@ -114,7 +116,9 @@ fix_ginza.bat
 python app.py
 ```
 
-Access http://127.0.0.1:8000 in your browser to use the application.
+4. **Access in browser**:
+   - Access http://127.0.0.1:8000 in Google Chrome browser to use the application
+   - Recommended browser: Google Chrome (required when using URL fetching feature with X/Twitter links)
 
 ### Git LFSファイルのトラブルシューティング / Git LFS File Troubleshooting
 
